@@ -1,0 +1,36 @@
+plugins {
+    id "org.springframework.boot" version "${springVersion}"
+}
+
+dependencies {
+    implementation project(':domain')
+    implementation project(':application')
+    implementation project(':adapters:db')
+    implementation project(':adapters:web')
+    implementation ('org.springframework.boot:spring-boot-starter-web')
+
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    implementation 'org.mapstruct:mapstruct:1.5.5.Final'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
+
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'junit' // excluding junit 4
+    }
+    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.10.2'
+    testImplementation 'org.junit.platform:junit-platform-launcher:1.10.2'
+    testImplementation 'org.mockito:mockito-junit-jupiter:5.11.0'
+    testImplementation 'com.tngtech.archunit:archunit:1.2.1'
+    testImplementation 'de.adesso:junit-insights:1.1.0'
+    
+    testAnnotationProcessor "org.mapstruct:mapstruct-processor:1.5.5.Final"
+
+}
+
+test {
+    useJUnitPlatform()
+    systemProperty 'de.adesso.junitinsights.enabled', 'true'
+}
+
+

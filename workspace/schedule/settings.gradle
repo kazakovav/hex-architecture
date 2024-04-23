@@ -1,0 +1,7 @@
+rootProject.name = 'schedule'
+
+include 'domain'
+include 'application'
+include 'adapters:db'
+include 'adapters:web'
+include 'infrastructure'
