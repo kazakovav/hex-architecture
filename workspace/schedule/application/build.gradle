@@ -5,15 +5,22 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     implementation 'jakarta.transaction:jakarta.transaction-api'
 
+    implementation 'am.ik.yavi:yavi'
+    implementation 'org.slf4j:slf4j-api'
+    implementation 'org.apache.commons:commons-lang3'
+    implementation 'org.apache.commons:commons-collections4'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations'
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
+
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'junit' // excluding junit 4
     }
-    
-    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.10.2'
-    testImplementation 'org.junit.platform:junit-platform-launcher:1.10.2'
-    testImplementation 'org.mockito:mockito-junit-jupiter:5.11.0'
-    testImplementation 'com.tngtech.archunit:archunit:1.2.1'
-    testImplementation 'de.adesso:junit-insights:1.1.0'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-engine'
+    testImplementation 'org.junit.platform:junit-platform-launcher'
+    testImplementation 'org.mockito:mockito-junit-jupiter'
+    testImplementation 'com.tngtech.archunit:archunit'
+    testImplementation 'de.adesso:junit-insights'
 }
 
 test {

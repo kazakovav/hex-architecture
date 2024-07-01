@@ -1,0 +1,37 @@
+POST http://localhost:8080/api/v1/expert
+Content-Type: application/json
+
+{
+  "firstName": "John",
+  "lastName": "Doe",
+  "birthDate": "1991-06-13",
+  "phone": "+78888888888",
+  "individualTaxpayerNumber": "123-123-123",
+  "serviceItemsIds": [
+    "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+  ]
+}
+
+### 
+GET http://localhost:8080/api/v1/expert/service-items
+Content-Type: application/json
+
+###
+POST http://localhost:8080/api/v1/expert
+Content-Type: application/json
+
+{
+  "firstName": "John",
+  "lastName": "Malkovich",
+  "birthDate": "1991-06-13",
+  "phone": "+78888888888",
+  "individualTaxpayerNumber": "123-123-123",
+  "serviceItemsIds": [
+    "d947bd9b-2537-416f-a808-e25c05846ba8",
+    "5e8ffd57-f644-4c0d-a202-d257e45f2299"
+  ]
+}
+
+### 
+GET http://localhost:8080/api/v1/expert/list
+Content-Type: application/json

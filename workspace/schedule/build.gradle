@@ -6,18 +6,35 @@ subprojects {
     group = 'ru.akazakov.beauty'
     version = '0.0.1-SNAPSHOT'
 
-
     apply plugin: 'java'
     apply plugin: 'io.spring.dependency-management'
     apply plugin: 'java-library'
 
     repositories {
         mavenCentral()
+        jcenter()
     }
 
+//    https://docs.spring.io/dependency-management-plugin/docs/current/reference/html/
     dependencyManagement {
         imports {
             mavenBom("org.springframework.boot:spring-boot-dependencies:${springVersion}")
+        }
+        dependencies {
+            dependency 'de.adesso:junit-insights:1.1.0'
+            dependency 'am.ik.yavi:yavi:0.9.1'
+            dependency 'org.apache.commons:commons-lang3:3.14.0'
+            dependency 'org.apache.commons:commons-collections4:4.0'
+
+            dependency 'org.mapstruct:mapstruct:1.5.5.Final'
+            dependency 'org.mapstruct:mapstruct-processor:1.5.5.Final'
+
+            dependency 'org.junit.jupiter:junit-jupiter-engine:5.10.2'
+            dependency 'org.junit.platform:junit-platform-launcher:1.10.2'
+            dependency 'org.mockito:mockito-junit-jupiter:5.11.0'
+            dependency 'com.tngtech.archunit:archunit:1.2.1'
+
+            dependency 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
         }
     }
 
