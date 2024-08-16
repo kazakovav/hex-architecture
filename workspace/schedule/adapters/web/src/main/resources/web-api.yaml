@@ -1,0 +1,141 @@
+openapi: 3.0.1
+info:
+  title: OpenAPI specification for Schedule Application
+  version: v1
+servers:
+  - url: http://localhost:8080
+    description: local server
+tags:
+  - name: Expert. Create, update or edit experts
+paths:
+  /api/v1/expert:
+    post:
+      tags:
+        - Expert
+      operationId: create
+      description: Создание Мастера
+      requestBody:
+        description: Данные для создания Мастера
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateExpertCommandRequest"
+        required: true
+      responses:
+        "200":
+          description: "Созданный Мастер с заполненными полями"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ExpertResponse"
+  /api/v1/expert/service-items:
+    get:
+      tags:
+        - Expert
+      operationId: getAvailableServiceItems
+      description: Получить список услуг, которые могут оказывать Мастеры
+      responses:
+        "200":
+          description: список услуг, которые может оказывать Мастер
+          content:
+            "application/json":
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ServiceItem"
+  /api/v1/expert/list:
+    get:
+      tags:
+        - Expert
+      operationId: getAllExperts
+      description: Получить список Мастеров
+      responses:
+        "200":
+          description: список Мастеров
+          content:
+            "application/json":
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ExpertResponse"
+components:
+  schemas:
+    CreateExpertCommandRequest:
+      type: object
+      description: Запрос для создания Мастера
+      required:
+        - firstName
+        - lastName
+        - birthDate
+        - phone
+      properties:
+        firstName:
+          type: string
+          description: Имя
+        middleName:
+          type: string
+          description: Отчество
+        lastName:
+          type: string
+          description: Фамилия
+        birthDate:
+          type: string
+          format: date
+          description: Дата рождения
+        phone:
+          type: string
+          description: Телефон
+        email:
+          type: string
+          description: Email
+        individualTaxpayerNumber:
+          type: string
+          description: ИНН
+        serviceItemsIds:
+          type: array
+          description: Список услуг, которые может оказывать Мастер
+          items:
+            type: string
+            format: uuid
+    ExpertResponse:
+      type: object
+      description: Данные Мастера
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Уникальный идентификатор Мастера
+        firstName:
+          type: string
+          description: Имя Мастера
+        middleName:
+          type: string
+          description: Отчество Мастера
+        lastName:
+          type: string
+          description: Фамилия Мастера
+        phone:
+          type: string
+          description: Телефон Мастера
+        email:
+          type: string
+          description: Email Мастера
+        services:
+          uniqueItems: true
+          description: Список предоставляемых Мастером Услуг
+          type: array
+          items:
+            $ref: "#/components/schemas/ServiceItem"
+    ServiceItem:
+      type: object
+      description: Услуги
+      required:
+        - id
+      properties:
+        id:
+          type: string
+          description: Уникальный идентификатор услуги
+          format: uuid
+        name:
+          description: Наименование услуги
+          type: string

@@ -14,6 +14,7 @@ subprojects {
         mavenCentral()
         jcenter()
     }
+    
 
 //    https://docs.spring.io/dependency-management-plugin/docs/current/reference/html/
     dependencyManagement {

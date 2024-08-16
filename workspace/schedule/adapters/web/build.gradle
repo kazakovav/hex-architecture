@@ -1,26 +1,103 @@
+plugins {
+    id "org.openapi.generator" version "7.7.0"
+}
+
 dependencies {
-    implementation project(':domain')
-    implementation project(':application')
+    implementation project(":domain")
+    implementation project(":application")
 
-    implementation 'org.springframework.boot:spring-boot-starter-web'
+    compileOnly "org.springframework.boot:spring-boot-starter-web"
 
-    compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
+    compileOnly "javax.servlet:servlet-api:2.5"
+    compileOnly "org.springdoc:springdoc-openapi-ui:1.8.0"
+    compileOnly "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.17.2"
+    compileOnly "javax.validation:validation-api:2.0.1.Final"
+    compileOnly "javax.persistence:javax.persistence-api:2.2"
+    compileOnly "javax.annotation:javax.annotation-api:1.3.2"
 
-    implementation 'org.mapdb:mapdb:3.1.0'
+    compileOnly "org.projectlombok:lombok"
+    annotationProcessor "org.projectlombok:lombok"
 
-    testImplementation('org.springframework.boot:spring-boot-starter-test') {
-        exclude group: 'junit' // excluding junit 4
+    implementation "org.mapstruct:mapstruct"
+    annotationProcessor "org.mapstruct:mapstruct-processor"
+
+    testImplementation("org.springframework.boot:spring-boot-starter-test") {
+        exclude group: "junit" // excluding junit 4
     }
 
-    testImplementation 'org.junit.jupiter:junit-jupiter-engine'
-    testImplementation 'org.junit.platform:junit-platform-launcher'
-    testImplementation 'org.mockito:mockito-junit-jupiter'
-    testImplementation 'com.tngtech.archunit:archunit'
-    testImplementation 'de.adesso:junit-insights'
+    testImplementation "org.junit.jupiter:junit-jupiter-engine"
+    testImplementation "org.junit.platform:junit-platform-launcher"
+    testImplementation "org.mockito:mockito-junit-jupiter"
+    testImplementation "com.tngtech.archunit:archunit"
+    testImplementation "de.adesso:junit-insights"
+    testAnnotationProcessor "org.mapstruct:mapstruct-processor"
 }
 
 test {
     useJUnitPlatform()
-    systemProperty 'de.adesso.junitinsights.enabled', 'true'
+    systemProperty "de.adesso.junitinsights.enabled", "true"
 }
+
+openApiGenerate {
+    // генерация будет производится на основе модели spring, 
+    // в сгенерированном коде будут использоваться аннотации spring
+    generatorName.set("spring")
+
+    // файл со спецификацией
+    inputSpec.set("${projectDir}/src/main/resources/web-api.yaml")
+    // сгенерированные сущности кладем в данную директорию
+    outputDir.set("${buildDir}/generated")
+
+    // данный суффикс будет добавляться к каждой сущности(модели) запроса/ответа
+    modelNameSuffix.set("Dto")
+    // пакет для сгенерированных сущностей
+    apiPackage.set("ru.akazakov.beauty.web.api")
+    // пакет для сгенерированных моделей
+    modelPackage.set("ru.akazakov.beauty.web.api.model")
+
+    // отключаем генерацию тестов для сущностей
+    generateModelTests = false
+
+    // Заменяем OffsetDateTime на LocalDateTime
+    typeMappings.put("OffsetDateTime", "LocalDateTime")
+    // Заменяем float на BigDecimal
+    typeMappings.put("float", "java.math.BigDecimal")
+    // Заменяем double на BigDecimal
+    typeMappings.put("double", "java.math.BigDecimal")
+
+    // здесь нужно не забыть поменять импорты
+    importMappings.put("java.time.OffsetDateTime", "java.time.LocalDateTime")
+
+    // настройки генерации 
+    // даты будут генериться с учетом java8 LocalDateTime
+    configOptions.put("dateLibrary", "java8")
+    // здесь мы будем использовать теги в качестве имен контроллеров
+    configOptions.put("useTags", "true")
+    configOptions.put("openApiNullable","false")
+    // указываем, что нам нужно сгенерить только модели и интерфейсы а не их имплементацию ввиде контроллеров
+    configOptions.put("interfaceOnly","true")
+    configOptions.put("skipDefaultInterface","true")
+}
+
+sourceSets {
+    main {
+        java {
+            java.srcDirs +=  "${buildDir}/generated/src/main/java"
+        }
+    }
+}
+
+compileJava {
+    options.compilerArgs += [
+        "-Amapstruct.suppressGeneratorTimestamp=true",
+        "-Amapstruct.suppressGeneratorVersionInfoComment=true",
+        "-Amapstruct.verbose=true",
+        "-Amapstruct.defaultComponentModel=spring",
+        "-Amapstruct.defaultInjectionStrategy=constructor",
+        "-Amapstruct.unmappedTargetPolicy=ERROR",
+        "-Amapstruct.unmappedSourcePolicy=WARN"
+    ]
+}
+
+
+compileJava.dependsOn tasks.openApiGenerate
